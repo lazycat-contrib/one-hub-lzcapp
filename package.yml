@@ -1,0 +1,14 @@
+package: lazycat.community.app.one-hub
+version: 0.14.23
+name: One Hub
+description: "All in one 的 OpenAI 接口 整合各种 API 访问方式 一键部署，开箱即用"
+min_os_version: "1.5.0"
+homepage: https://github.com/MartialBE/one-hub
+author: MartialBE
+locales:
+  zh:
+    description: "All in one 的 OpenAI 接口 整合各种 API 访问方式 一键部署，开箱即用"
+    name: One Hub
+  en:
+    description: "All-in-one OpenAI API gateway integrating various API access methods; one-click deployment, ready to use out of the box"
+    name: One Hub

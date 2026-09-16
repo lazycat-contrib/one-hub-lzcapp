@@ -1,0 +1,34 @@
+application:
+  subdomain: one-hub
+  background_task: true
+  public_path:
+    - /
+  upstreams:
+    - location: /
+      backend: http://one-hub:3000/
+services:
+  one-hub:
+    # upstream: martialbe/one-api:v0.14.23
+    image: martialbe/one-api:v0.14.23
+    environment:
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET={{stable_secret "onehub#sessionsk" | substr 0 24}}
+      - USER_TOKEN_SECRET={{stable_secret "onehub#usertoken" | substr 0 32}}
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/data:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $$2}'"
+      start_period: 2m0s
+    depends_on:
+      - redis
+  redis:
+    # upstream: library/redis:7.4-alpine
+    image: library/redis:7.4-alpine
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli ping
+      start_period: 90s

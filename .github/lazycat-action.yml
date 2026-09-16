@@ -1,0 +1,53 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: .lazycat-build/one-hub.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: one-hub
+
+build:
+  run_buildscript: false
+
+images:
+  # 主应用：上游 martialbe/one-api 有完整三段 SemVer tag 家族（v0.14.x 等）
+  - id: one-hub
+    target: service
+    service: one-hub
+    source: martialbe/one-api
+    channel: stable
+    sort: semver
+    tag_regex: '^v\d+\.\d+\.\d+$'
+    delivery:
+      mode: lazycat
+  # 辅助 redis：7.x-alpine 家族，tag 带后缀 → custom + 版本映射 7.4-alpine → 7.4.0
+  - id: redis
+    target: service
+    service: redis
+    source: library/redis
+    channel: custom
+    sort: semver
+    tag_regex: '^7\.\d+-alpine$'
+    version_regex: '^(?P<version>7\.\d+)-alpine$'
+    version_template: '{version}.0'
+    delivery:
+      mode: lazycat
+
+stores:
+  official:
+    enabled: true
+    skip_if_version_exists: true
+    changelog_locales: [zh, en]
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: One Hub
+    summary: "All in one 的 OpenAI 接口 整合各种 API 访问方式 一键部署，开箱即用"
