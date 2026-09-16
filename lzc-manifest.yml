@@ -8,8 +8,8 @@ application:
       backend: http://one-hub:3000/
 services:
   one-hub:
-    # upstream: martialbe/one-api:v0.14.23
-    image: martialbe/one-api:v0.14.23
+    # upstream: martialbe/one-api:v0.14.27
+    image: registry.lazycat.cloud/czyt/martialbe/one-api:9c1776186085020e
     environment:
       - REDIS_CONN_STRING=redis://redis
       - SESSION_SECRET={{stable_secret "onehub#sessionsk" | substr 0 24}}
@@ -26,7 +26,7 @@ services:
       - redis
   redis:
     # upstream: library/redis:7.4-alpine
-    image: library/redis:7.4-alpine
+    image: registry.lazycat.cloud/czyt/library/redis:feb21bfd39585516
     healthcheck:
       test:
         - CMD-SHELL
